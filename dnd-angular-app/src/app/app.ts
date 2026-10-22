@@ -1,12 +1,29 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CharacterService } from './services/character.service';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.css',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './app.html',
+  styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('dnd-angular-app');
+export class App implements OnInit {
+  title = 'dnd-angular-app';
+  characters: any[] = [];
+
+  constructor(private characterService: CharacterService) {}
+
+  ngOnInit(): void {
+    this.characterService.getCharacters().subscribe({
+      next: (response) => {
+        this.characters = response.data;
+        console.log('Personajes cargados:', this.characters);
+      },
+      error: (err) => {
+        console.error('Error al conectar con Strapi:', err);
+      }
+    });
+  }
 }
