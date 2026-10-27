@@ -29,7 +29,7 @@
 
     <!-- COLUMNA DERECHA: Carrito (Mi Equipo) -->
     <div style="flex: 1; border: 2px solid #8b0000; padding: 15px; border-radius: 8px; background: #fff5f5;">
-      <h2>🏰 Mi Equipo ({{ cartService.getTeam().length }})</h2>
+      <h2>Mi Equipo ({{ cartService.getTeam().length }})</h2>
       
       <div *ngIf="cartService.getTeam().length === 0">
         <p><i>No has reclutado ningún héroe todavía.</i></p>
