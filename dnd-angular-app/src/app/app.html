@@ -1,16 +1,60 @@
-<div style="font-family: Arial, sans-serif; padding: 20px;">
-  <h1>El Tablero de D&D - Aventureros </h1>
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 1000px; margin: 0 auto;">
+  <h1> Gremio de Aventureros D&D </h1>
   
-  <div *ngIf="characters.length === 0">
-    <p>Cargando aventureros o no hay personajes creados...</p>
-  </div>
+  <div style="display: flex; gap: 40px; align-items: flex-start;">
 
-  <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-    <div *ngFor="let char of characters" style="border: 2px solid #333; padding: 15px; border-radius: 8px; width: 200px; background: #f9f9f9;">
-      <h3>{{ char.name || char.attributes?.name }}</h3>
-      <p><strong>Clase:</strong> {{ char.characterClass || char.attributes?.characterClass }}</p>
-      <p><strong>Nivel:</strong> {{ char.level || char.attributes?.level }}</p>
-      <p><strong>HP:</strong> {{ char.hp || char.attributes?.hp }}</p>
+    <!-- COLUMNA IZQUIERDA: Personajes disponibles desde Strapi -->
+    <div style="flex: 2;">
+      <h2>Aventureros Disponibles</h2>
+      
+      <div *ngIf="characters.length === 0">
+        <p>Cargando aventureros desde Strapi...</p>
+      </div>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div *ngFor="let char of characters" 
+             style="border: 2px solid #333; padding: 15px; border-radius: 8px; width: 180px; background: #fff;">
+          <h3>{{ char.name || char.attributes?.name }}</h3>
+          <p><strong>Clase:</strong> {{ char.characterClass || char.attributes?.characterClass }}</p>
+          <p><strong>Nivel:</strong> {{ char.level || char.attributes?.level }}</p>
+          <p><strong>HP:</strong> {{ char.hp || char.attributes?.hp }}</p>
+          
+          <button (click)="addCharacter(char)" 
+                  style="background-color: #4CAF50; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; width: 100%;">
+             Reclutar
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- COLUMNA DERECHA: Carrito (Mi Equipo) -->
+    <div style="flex: 1; border: 2px solid #8b0000; padding: 15px; border-radius: 8px; background: #fff5f5;">
+      <h2>🏰 Mi Equipo ({{ cartService.getTeam().length }})</h2>
+      
+      <div *ngIf="cartService.getTeam().length === 0">
+        <p><i>No has reclutado ningún héroe todavía.</i></p>
+      </div>
+
+      <ul style="list-style: none; padding: 0;">
+        <li *ngFor="let member of cartService.getTeam()" 
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+          <span>
+            <strong>{{ member.name || member.attributes?.name }}</strong> 
+            ({{ member.characterClass || member.attributes?.characterClass }})
+          </span>
+          <button (click)="removeCharacter(member.id)" 
+                  style="background-color: #f44336; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+            
+          </button>
+        </li>
+      </ul>
+
+      <button *ngIf="cartService.getTeam().length > 0" 
+              (click)="cartService.clearTeam()" 
+              style="background-color: #333; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px;">
+        Vaciar Equipo
+      </button>
+    </div>
+
   </div>
 </div>
